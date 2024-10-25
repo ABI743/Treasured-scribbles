@@ -31,10 +31,10 @@ export default function AutographDisplay() {
   return (
     <div className="space-y-4">
       {autographs.map((autograph) => (
-        <div key={autograph._id} className="border p-4 rounded">
-          <h3 className="font-bold">{autograph.name}</h3>
-          <p>{autograph.message}</p>
-          <p className="text-sm text-gray-500">
+        <div key={autograph._id} className="border p-4 rounded bg-amber-50">
+          <h3 className="font-bold text-amber-800">{autograph.name}</h3>
+          <p className="text-amber-700">{autograph.message}</p>
+          <p className="text-sm text-amber-500">
             Signed on: {new Date(autograph.createdAt).toLocaleDateString()}
           </p>
         </div>
