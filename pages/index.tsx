@@ -8,9 +8,9 @@ export default function Home() {
   const [readAccess, setReadAccess] = useState(false)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <main className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-4">Treasured Scribbles</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-amber-100 to-amber-200">
+      <main className="bg-white p-8 rounded-lg shadow-2xl max-w-4xl w-full">
+        <h1 className="text-4xl font-bold mb-6 text-center text-amber-800">Treasured Scribbles</h1>
         {!writeAccess && !readAccess && (
           <PasswordProtection 
             onWriteAccess={() => setWriteAccess(true)}
