@@ -29,28 +29,28 @@ export default function AutographEntryForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block mb-1">Name:</label>
+        <label htmlFor="name" className="block mb-1 text-amber-800">Name:</label>
         <input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full border p-2"
+          className="w-full border p-2 rounded"
         />
       </div>
       <div>
-        <label htmlFor="message" className="block mb-1">Message:</label>
+        <label htmlFor="message" className="block mb-1 text-amber-800">Message:</label>
         <textarea
           id="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
-          className="w-full border p-2"
+          className="w-full border p-2 rounded"
           rows={4}
         ></textarea>
       </div>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+      <button type="submit" className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 transition">
         Submit Autograph
       </button>
     </form>
