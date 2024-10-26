@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasured Scribbles</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        input[type="password"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #signature-pad {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function App() {
+            const [view, setView] = useState('home');
+            const [entries, setEntries] = useState([]);
+            const [currentEntry, setCurrentEntry] = useState({ name: '', message: '' });
+            const signaturePadRef = useRef(null);
+
+            useEffect(() => {
+                if (view === 'write' && signaturePadRef.current) {
+                    const canvas = document.getElementById('signature-pad');
+                    signaturePadRef.current = new SignaturePad(canvas);
+                }
+            }, [view]);
+
+            const handlePasswordSubmit = (type, password) => {
+                const correctPassword = type === 'write' ? 'Treasure123' : 'ABIN1john';
+                if (password === correctPassword) {
+                    setView(type);
+                } else {
+                    alert('Incorrect password');
+                }
+            };
+
+            const handleEntrySubmit = () => {
+                if (currentEntry.name && currentEntry.message && signaturePadRef.current) {
+                    const newEntry = {
+                        ...currentEntry,
+                        signature: signaturePadRef.current.toDataURL(),
+                        date: new Date().toLocaleString()
+                    };
+                    setEntries([...entries, newEntry]);
+                    setCurrentEntry({ name: '', message: '' });
+                    signaturePadRef.current.clear();
+                    alert('Entry saved successfully!');
+                } else {
+                    alert('Please fill all fields and sign');
+                }
+            };
+
+            const renderHome = () => (
+                <div>
+                    <h1>Treasured Scribbles</h1>
+                    <p>Hi 👋 from Abin, feel free to add any memories or writings to the Treasured Scribbles.</p>
+                    <button className="button" onClick={() => setView('writePassword')}>Write</button>
+                    <button className="button" onClick={() => setView('readPassword')}>View</button>
+                </div>
+            );
+
+            const renderPasswordPrompt = (type) => (
+                <div>
+                    <h2>Enter Password to {type === 'write' ? 'Write' : 'View'}</h2>
+                    <input
+                        type="password"
+                        placeholder="Enter password"
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') handlePasswordSubmit(type, e.target.value);
+                        }}
+                    />
+                    <button className="button" onClick={() => setView('home')}>Back</button>
+                </div>
+            );
+
+            const renderWrite = () => (
+                <div>
+                    <h2>Write a New Entry</h2>
+                    <input
+                        type="text"
+                        placeholder="Your Name"
+                        value={currentEntry.name}
+                        onChange={(e) => setCurrentEntry({...currentEntry, name: e.target.value})}
+                    />
+                    <textarea
+                        placeholder="Your Message"
+                        value={currentEntry.message}
+                        onChange={(e) => setCurrentEntry({...currentEntry, message: e.target.value})}
+                    ></textarea>
+                    <h3>Sign here:</h3>
+                    <canvas id="signature-pad" width="400" height="200"></canvas>
+                    <button className="button" onClick={handleEntrySubmit}>Save Entry</button>
+                    <button className="button" onClick={() => setView('home')}>Back</button>
+                </div>
+            );
+
+            const renderView = () => (
+                <div>
+                    <h2>View Entries</h2>
+                    {entries.map((entry, index) => (
+                        <div key={index} style={{border: '1px solid #ddd', margin: '10px 0', padding: '10px'}}>
+                            <h3>{entry.name}</h3>
+                            <p>{entry.message}</p>
+                            <img src={entry.signature} alt="Signature" style={{maxWidth: '100%'}} />
+                            <p>Date: {entry.date}</p>
+                        </div>
+                    ))}
+                    <button className="button" onClick={() => setView('home')}>Back</button>
+                </div>
+            );
+
+            switch(view) {
+                case 'writePassword':
+                    return renderPasswordPrompt('write');
+                case 'readPassword':
+                    return renderPasswordPrompt('read');
+                case 'write':
+                    return renderWrite();
+                case 'read':
+                    return renderView();
+                default:
+                    return renderHome();
+            }
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
