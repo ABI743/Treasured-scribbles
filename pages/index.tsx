@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import Head from 'next/head'
 
+interface Entry {
+  name: string;
+  message: string;
+  date: string;
+}
+
 export default function Home() {
-  const [view, setView] = useState('home')
+  const [view, setView] = useState<'home' | 'writePassword' | 'readPassword' | 'write' | 'read'>('home')
   const [password, setPassword] = useState('')
-  const [entries, setEntries] = useState([])
-  const [currentEntry, setCurrentEntry] = useState({ name: '', message: '' })
+  const [entries, setEntries] = useState<Entry[]>([])
+  const [currentEntry, setCurrentEntry] = useState<{ name: string; message: string }>({ name: '', message: '' })
 
   const handlePasswordSubmit = (type: 'write' | 'read') => {
     const correctPassword = type === 'write' ? 'Treasure123' : 'ABIN1john'
